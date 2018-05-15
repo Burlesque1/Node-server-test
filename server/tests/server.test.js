@@ -226,12 +226,12 @@ describe('GET /users/me', () => {
 
   it('should return 401 if not authenticated', (done) => {
     request(app)
-    .get('/users/me')
-    .expect(401)
-    .expect((res) => {
-      expect(res.body).toEqual({});
-    })
-    .end(done());
+      .get('/users/me')
+      .expect(401)
+      .expect((res) => {
+        expect(res.body).toEqual({});
+      })
+      .end(done);
   });
 });
 
@@ -303,7 +303,16 @@ describe('POST /users/login', () => {
         }
 
         User.findById(users[1]._id).then((user) => {
+          console.log(typeof user, typeof user.toObject())
+          
+          console.log(user, '======', user.toObject())
+          expect(user.tokens[1]).toContain({
+            _id: "5ac7e9d708e3352b4cc7a830",
+            access: 'auth',
+            token: res.headers['x-auth']
+          });
           expect(user.toObject().tokens[1]).toMatchObject({
+            _id: "5ac7e9d708e3352b4cc7a830",
             access: 'auth',
             token: res.headers['x-auth']
           });

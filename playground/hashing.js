@@ -1,60 +1,41 @@
-const {SHA256} = require('crypto-js');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs')
+const { SHA256 } = require("crypto-js"); // a hashing function
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
+// https guarantee securely transferring token (not seeing in the middle by others)
+// jwt for token verification (prevent id 4 delete id 5 data)
+// salt prevent decode using look up table
 
 
-var password = '123abc!';
-bcrypt.genSalt(10, (err, salt) => {
-  bcrypt.hash(password, salt, (err, hash) => {
-    console.log(hash, '---------');
-  })
-})
+var message = "aaaaaa";
+var hash = SHA256(message).toString();
+console.log(message, hash);
 
-var hashedpassword = '$2a$10$mo/FarcC0bSZBaddkaH9tuvxR4Z15Wu7teVjhnqJjTZ128pJafa6W'
-
-bcrypt.compare(password, hashedpassword, (err, res) => {
-  console.log(res);
-})
 var data = {
   id: 10
 };
-
-var token = jwt.sign(data, '123abc');
-console.log(token);
-
-var decoded = jwt.verify(token, '123abc');
-console.log('decoded', decoded);
-
-
-
-
+// the same as jwt.sign
+// var token = {
+//   data,
+//   hash: SHA256(JSON.stringify(data)).toString()
+// }
+var token = jwt.sign(data, "123abc"); // '123abc' is the secret
+var decoded = jwt.verify(token, "123abc");
+console.log(token, decoded);
 
 
+// hash with salt would generate different value each time
+// but those different values can pass the bwt.compare check
+var password = "123abc!";
+bcrypt.genSalt(10, (err, salt) => {
+  bcrypt.hash(password, salt, (err, hash) => {
+    console.log(hash, salt, password);
+  });
+});
 
-
-
-var message = 'I am user number 3';
-var hash = SHA256(message).toString();
-
-console.log(`Message: ${message}`);
-console.log(`Hash: ${hash}`);
-
-var data = {
-  id: 4
-};
-var token = {
-  data,
-  hash: SHA256(JSON.stringify(data) + 'somesecret').toString()
-}
-
-
-// token.data.id = 5;
-// token.hash = SHA256(JSON.stringify(token.data)).toString();
-
-
-var resultHash = SHA256(JSON.stringify(token.data) + 'somesecret').toString();
-if (resultHash === token.hash) {
-  console.log('Data was not changed');
-} else {
-  console.log('Data was changed. Do not trust!');
-}
+var hashedpassword =
+  "$2a$10$tLAPrpOj26ufo6WI/cqzIufIy/mOZTgCrR4hodPH2lnEUKExCWdyO";
+ 
+bcrypt.compare(password, hashedpassword, (err, res) => {
+  console.log(res);
+});
