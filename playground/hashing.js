@@ -6,15 +6,11 @@ const bcrypt = require("bcryptjs");
 // jwt for token verification (prevent id 4 delete id 5 data)
 // salt prevent decode using look up table
 
-
-var message = "aaaaaa";
-var hash = SHA256(message).toString();
-console.log(message, hash);
-
 var data = {
-  id: 10
-};
-// the same as jwt.sign
+  id: 5
+}
+// SHA256 to sign 
+// jwt.io can only decode json payload
 // var token = {
 //   data,
 //   hash: SHA256(JSON.stringify(data)).toString()
@@ -25,7 +21,7 @@ console.log(token, decoded);
 
 
 // hash with salt would generate different value each time
-// but those different values can pass the bwt.compare check
+// but those different values can get the same value in bwt.compare()
 var password = "123abc!";
 bcrypt.genSalt(10, (err, salt) => {
   bcrypt.hash(password, salt, (err, hash) => {
