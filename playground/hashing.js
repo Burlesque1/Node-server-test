@@ -1,9 +1,9 @@
-const { SHA256 } = require("crypto-js"); // a hashing function
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const { SHA256 } = require("crypto-js"); // a hashing function to sign
+const jwt = require("jsonwebtoken");  // encode data
+const bcrypt = require("bcryptjs");   // password encryption
 
 // https guarantee securely transferring token (not seeing in the middle by others)
-// jwt for token verification (prevent id 4 delete id 5 data)
+// jwt for token verification (prevent tampering, id 4 delete id 5 data)
 // salt prevent decode using look up table
 
 var data = {
@@ -30,8 +30,8 @@ bcrypt.genSalt(10, (err, salt) => {
 });
 
 var hashedpassword =
-  "$2a$10$tLAPrpOj26ufo6WI/cqzIufIy/mOZTgCrR4hodPH2lnEUKExCWdyO";
+  "$2a$10$SsKwmDF56/RkZ0MVkkXNKeixJXCPxPomIgjjrFpfLSDD8VgQgAS2G";
  
 bcrypt.compare(password, hashedpassword, (err, res) => {
-  console.log(res);
+  console.log(password, hashedpassword, res);
 });
